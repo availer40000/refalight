@@ -1,0 +1,163 @@
+import { useState, useEffect } from 'react'
+
+const navLinks = [
+  { label: 'Music', href: '#music' },
+  { label: 'About', href: '#about' },
+  { label: 'Live', href: '#live' },
+  { label: 'Gallery', href: '#gallery' },
+  { label: 'Contact', href: '#contact' },
+]
+
+export default function Navigation() {
+  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('')
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    const sections = navLinks.map((l) => l.href.slice(1))
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActiveSection(e.target.id)
+        })
+      },
+      { rootMargin: '-40% 0px -55% 0px' }
+    )
+    sections.forEach((id) => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
+  return (
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? 'glass border-b border-[rgba(56,189,248,0.1)]'
+            : 'bg-transparent'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
+          {/* Logo */}
+          <a
+            href="#"
+            className="flex items-center gap-3 group"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            <div className="w-7 h-7 relative">
+              <div className="absolute inset-0 rounded-full border border-[#38BDF8] opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-[3px] rounded-full bg-[#38BDF8] opacity-25 group-hover:opacity-50 transition-opacity duration-300" />
+              <div className="absolute inset-[6px] rounded-full bg-[#38BDF8] opacity-80" />
+            </div>
+            <span
+              className="text-white font-light tracking-[0.25em] text-sm uppercase"
+              style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.2em' }}
+            >
+              Refalight
+            </span>
+          </a>
+
+          {/* Desktop Nav */}
+          <ul className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  className={`text-[13px] font-light tracking-widest uppercase transition-all duration-300 relative group ${
+                    activeSection === link.href.slice(1)
+                      ? 'text-[#38BDF8]'
+                      : 'text-[#94A3B8] hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                  <span
+                    className={`absolute -bottom-0.5 left-0 h-px bg-[#38BDF8] transition-all duration-300 ${
+                      activeSection === link.href.slice(1)
+                        ? 'w-full'
+                        : 'w-0 group-hover:w-full'
+                    }`}
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          {/* Stream button */}
+          <div className="hidden md:flex items-center gap-4">
+            <a
+              href="#music"
+              className="px-5 py-2 text-[12px] font-medium tracking-widest uppercase border border-[#38BDF8] text-[#38BDF8] rounded-full hover:bg-[#38BDF8] hover:text-[#050816] transition-all duration-300"
+            >
+              Stream Now
+            </a>
+          </div>
+
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden flex flex-col gap-1.5 p-2 group"
+            aria-label="Toggle menu"
+          >
+            <span
+              className={`block h-px w-6 bg-white transition-all duration-300 origin-center ${
+                menuOpen ? 'rotate-45 translate-y-[5px]' : ''
+              }`}
+            />
+            <span
+              className={`block h-px bg-white transition-all duration-300 ${
+                menuOpen ? 'w-0 opacity-0' : 'w-4'
+              }`}
+            />
+            <span
+              className={`block h-px w-6 bg-white transition-all duration-300 origin-center ${
+                menuOpen ? '-rotate-45 -translate-y-[5px]' : ''
+              }`}
+            />
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile menu overlay */}
+      <div
+        className={`fixed inset-0 z-40 transition-all duration-500 ${
+          menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        style={{ background: 'rgba(5, 8, 22, 0.97)', backdropFilter: 'blur(24px)' }}
+      >
+        <div className="flex flex-col items-center justify-center h-full gap-10">
+          {navLinks.map((link, i) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className="text-3xl font-light text-white tracking-widest uppercase transition-all duration-300 hover:text-[#38BDF8]"
+              style={{ transitionDelay: menuOpen ? `${i * 60}ms` : '0ms' }}
+            >
+              {link.label}
+            </a>
+          ))}
+          <a
+            href="#music"
+            onClick={() => setMenuOpen(false)}
+            className="mt-4 px-8 py-3 text-sm font-medium tracking-widest uppercase border border-[#38BDF8] text-[#38BDF8] rounded-full hover:bg-[#38BDF8] hover:text-[#050816] transition-all duration-300"
+          >
+            Stream Now
+          </a>
+        </div>
+      </div>
+    </>
+  )
+}
