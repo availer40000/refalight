@@ -180,7 +180,7 @@ export default function Hero() {
             className="text-[#475569] text-sm tracking-[0.4em] mb-16"
             style={{ fontFamily: 'Noto Sans JP, sans-serif', fontWeight: 300 }}
           >
-            光を奏でる日本人アーティスト
+           The next chapter starts here. 
           </p>
         </div>
 
