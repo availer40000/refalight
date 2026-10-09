@@ -53,11 +53,11 @@ export default function About() {
           </p>
 
           <p
-            className="text-white font-light leading-[1.9] text-[15px]"
-            style={{ fontFamily: 'Noto Sans JP, sans-serif' }}
-          >
-            2026年、Refalight始動。
-          </p>
+  className="text-[#94A3B8] font-light leading-[1.9] text-[15px]"
+  style={{ fontFamily: 'Noto Sans JP, sans-serif' }}
+>
+  2026年、Refalight始動。
+</p>
 
           <p
             className="text-[#94A3B8] font-light leading-[1.9] text-[15px]"
