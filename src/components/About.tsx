@@ -63,7 +63,7 @@ export default function About() {
             className="text-[#94A3B8] font-light leading-[1.9] text-[15px]"
             style={{ fontFamily: 'Noto Sans JP, sans-serif' }}
           >
-            日々の中で感じる光や感情を音楽に変え、新しい景色を描いていく。
+            喜びも葛藤も音楽に乗せ、心の奥にある想いを解き放つ。
           </p>
         </div>
 
